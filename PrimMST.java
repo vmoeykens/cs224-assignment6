@@ -28,7 +28,6 @@ class PrimMST {
             S.add(v.getId());
             if (v.getId() != startVertex.getId()) {
                 T.add(new TreeEdge(v.getPredecessor(), v.getId()));
-                // add the edge (pred(v), v) to T where pred is predecessor
             }
             LinkedList<Edge<Character>> edges = v.getEdges();
             for (int i = 0; i < edges.size(); i++) {
