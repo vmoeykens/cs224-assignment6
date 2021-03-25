@@ -4,9 +4,16 @@ import java.util.PriorityQueue;
 
 class PrimMST {
 
+    public static void main(String[] args) {
+        Graph<Character> g = makeGraph();
+        System.out.println("Graph represented by adjacency list:\n" + g.toString() + "\n");
+        runPrimMST(g, new Vertex<Character>('a'));
+
+    }
+    
     public static void runPrimMST(Graph<Character> g, Vertex<Character> startVertex) {
         ArrayList<Character> S = new ArrayList<Character>();
-        ArrayList<Edge<Character>> T = new ArrayList<Edge<Character>>();
+        ArrayList<TreeEdge> T = new ArrayList<TreeEdge>();
         g.changeKey(startVertex, 0);
         PriorityQueue<Vertex<Character>> q = BuildPQ(g);
         displayState(S, T, q);
@@ -15,6 +22,7 @@ class PrimMST {
             Vertex<Character> v = q.poll();
             S.add(v.getId());
             if (v.getId() != startVertex.getId()) {
+                T.add(new TreeEdge(v.getPredecessor(), v.getId()));
                 // add the edge (pred(v), v) to T where pred is predecessor
             }
             LinkedList<Edge<Character>> edges = v.getEdges();
@@ -31,14 +39,7 @@ class PrimMST {
         }
     }
 
-    public static void main(String[] args) {
-        Graph<Character> g = makeGraph();
-        //System.out.println("Graph represented by adjacency list:\n" + g.toString());
-        runPrimMST(g, new Vertex<Character>('a'));
-
-    }
-
-    public static void displayState(ArrayList<Character> S, ArrayList<Edge<Character>> T, PriorityQueue<Vertex<Character>> q) {
+    public static void displayState(ArrayList<Character> S, ArrayList<TreeEdge> T, PriorityQueue<Vertex<Character>> q) {
         PriorityQueue<Vertex<Character>> copyQ = new PriorityQueue<Vertex<Character>>(q); 
         System.out.print("S = {");
         for (int i = 0; i < S.size(); i++) {
@@ -48,7 +49,7 @@ class PrimMST {
 
         System.out.print("T = {");
         for (int i = 0; i < T.size(); i++) {
-            System.out.print(T.get(i));
+            System.out.print(T.get(i) + ", ");
         }
         System.out.print("}\n");
         
@@ -88,6 +89,30 @@ class PrimMST {
         g.addEdge('g', 'h', 44);
 
         return g;
+    }
+
+}
+
+class TreeEdge {
+    Character from;
+    Character to;
+    
+    public TreeEdge(Character from, Character to) {
+        this.from = from;
+        this.to = to;
+    }
+
+    public Character getFrom() {
+        return this.from;
+    }
+
+    public Character getTo() {
+        return this.to;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + getFrom() + ", " + getTo() + ")";
     }
 
 }
@@ -173,7 +198,7 @@ class Vertex<T> implements Comparable<Vertex<T>>{
     T id;
     int keyVal;
     LinkedList<Edge<T>> edges;
-    Vertex<T> pred;
+    T pred;
 
 
     public Vertex(T id) {
@@ -187,12 +212,17 @@ class Vertex<T> implements Comparable<Vertex<T>>{
             return false;
         } else {
             this.edges.add(edge);
+            this.pred = edge.getTo();
             return true;
         }
     }
 
     public void setPredecessor(Vertex<T> pred) {
-        this.pred = pred;
+        this.pred = pred.id;
+    }
+
+    public T getPredecessor() {
+        return this.pred;
     }
 
     public T getId() {
