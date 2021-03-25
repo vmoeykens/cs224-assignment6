@@ -6,12 +6,16 @@ import java.util.Scanner;
 class PrimMST {
 
     public static void main(String[] args) {
+        // Create a graph object and populate it with graph from assignment
         Graph<Character> g = makeGraph();
+        // Print out the graph adjacency list
         System.out.println("Graph represented by adjacency list:\n" + g.toString() + "\n");
+        // Prompt for start verted
         System.out.print("Enter character for the start vertex: ");
         Scanner scanner = new Scanner(System.in); 
         char startVertex = scanner.next().charAt(0);
         scanner.close();
+        // Run Prim's Algorithm on the graph starting at the start vertex
         runPrimMST(g, new Vertex<Character>(startVertex));
 
     }
@@ -97,6 +101,9 @@ class PrimMST {
 
 }
 
+/**
+ * Class to represent a basic tree edge (has both to and from verticies unlike Edge class)
+ */
 class TreeEdge {
     Character from;
     Character to;
@@ -121,14 +128,22 @@ class TreeEdge {
 
 }
 
+/**
+ * Class representing a weighted undirected graph
+ */
 class Graph<T> {
     LinkedList<Vertex<T>> vertices;
 
-
+    /**
+     * Default constructor creating a adjacency list representation of the graph
+     */
     public Graph() {
         this.vertices = new LinkedList<Vertex<T>>();
     }
 
+    /**
+     * Change the priority queue key for a given vertex in the graph
+     */
     public void changeKey(Vertex<T> vertex, int newKey) {
         for (int i = 0; i < this.vertices.size(); i++) {
             if (this.vertices.get(i).getId() == vertex.getId()){
@@ -137,6 +152,9 @@ class Graph<T> {
         }
     }
 
+    /**
+     * Change the predecessor value for a given vertex in the graph
+     */
     public void changePred(Vertex<T> vertex, Vertex<T> newPred) {
         for (int i = 0; i < this.vertices.size(); i++) {
             if (this.vertices.get(i).getId() == vertex.getId()){
@@ -145,6 +163,9 @@ class Graph<T> {
         }
     }
 
+    /**
+     * Add an edge to the graph; if either vertices don't exist, create them and add them
+     */
     public void addEdge(T from, T to, int weight) {
         Edge<T> toEdge = new Edge<T>(to, weight);
         Edge<T> fromEdge = new Edge<T>(from, weight);
@@ -165,6 +186,9 @@ class Graph<T> {
         }
     }
 
+    /**
+     * Check if a vertex (by id) exists in the graph
+     */
     public boolean vertexExists(T id) {
         for (int i = 0; i < this.vertices.size(); i++) {
             if (this.vertices.get(i).getId() == id) {
@@ -174,10 +198,16 @@ class Graph<T> {
         return false;
     }
 
+    /**
+     * Get the list of vertices
+     */
     public LinkedList<Vertex<T>> getVertices() {
         return this.vertices;
     }
 
+    /**
+     * Get a vertex by its id
+     */
     public int getVertexById(T id) {
         for (int i = 0; i < this.vertices.size(); i++) {
             if (this.vertices.get(i).getId() == id) {
@@ -198,6 +228,9 @@ class Graph<T> {
 
 }
 
+/**
+ * The Vertex class implements a vertex and represents its edges by a linked list of Edge objects
+ */
 class Vertex<T> implements Comparable<Vertex<T>>{
     T id;
     int keyVal;
@@ -205,12 +238,18 @@ class Vertex<T> implements Comparable<Vertex<T>>{
     T pred;
 
 
+    /**
+     * Constructor taking an id 
+     */
     public Vertex(T id) {
         this.id = id;
         this.edges = new LinkedList<Edge<T>>();
         this.keyVal = Integer.MAX_VALUE;
     }
 
+    /**
+     * Method to add an edge to the vertex
+     */
     public boolean addEdge(Edge<T> edge) {
         if (this.edges.contains(edge)) {
             return false;
@@ -221,6 +260,7 @@ class Vertex<T> implements Comparable<Vertex<T>>{
         }
     }
 
+    // Getters and setters
     public void setPredecessor(Vertex<T> pred) {
         this.pred = pred.id;
     }
@@ -241,6 +281,9 @@ class Vertex<T> implements Comparable<Vertex<T>>{
         return this.edges;
     }
 
+    /**
+     * Change the priority key value of the verted
+     */
     public void changeKey(int newKey) {
         this.keyVal = newKey;
     }
@@ -258,6 +301,9 @@ class Vertex<T> implements Comparable<Vertex<T>>{
         return "(" + this.getId() + ", " + this.getKeyVal() + "), ";
     }
 
+    /**
+     * Comparison method overriden to allow compatibility with priority queue
+     */
     @Override
     public int compareTo(Vertex<T> otherVertex) {
         return this.getKeyVal() - otherVertex.getKeyVal();
@@ -265,10 +311,16 @@ class Vertex<T> implements Comparable<Vertex<T>>{
 
 }
 
+/**
+ * Class representing a weighted edge
+ */
 class Edge<T> {
     T to;
     int weight;
 
+    /**
+     * Constructor taking the vertex the edge goes to and the weight of the edge
+     */
     public Edge(T to, int weight) {
         this.to = to;
         this.weight = weight;
@@ -281,7 +333,6 @@ class Edge<T> {
     public int getWeight() {
         return this.weight;
     }
-
 
     @Override
     public String toString() {
