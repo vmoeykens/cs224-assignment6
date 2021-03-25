@@ -1,13 +1,18 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Scanner;
 
 class PrimMST {
 
     public static void main(String[] args) {
         Graph<Character> g = makeGraph();
         System.out.println("Graph represented by adjacency list:\n" + g.toString() + "\n");
-        runPrimMST(g, new Vertex<Character>('a'));
+        System.out.print("Enter character for the start vertex: ");
+        Scanner scanner = new Scanner(System.in); 
+        char startVertex = scanner.next().charAt(0);
+        scanner.close();
+        runPrimMST(g, new Vertex<Character>(startVertex));
 
     }
     
